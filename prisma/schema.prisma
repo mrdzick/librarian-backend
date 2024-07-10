@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  id                 Int            @id @default(autoincrement())
+  code               String         @db.VarChar(100) @unique
+  name               String         @db.VarChar(100)
+  borrowedBooksCount Int            @default(0) @map("borrowed_books_count")
+  isPenalized        Boolean        @default(false) @map("is_penalized")
+  createdAt          DateTime       @default(now()) @map("created_at")
+  borrowedBooks      BorrowedBook[]
+
+  @@map("members")
+}
+
+model Book {
+  id            Int            @id @default(autoincrement())
+  code          String         @db.VarChar(100) @unique
+  title         String         @db.VarChar(100)
+  author        String         @db.VarChar(100)
+  stock         Int
+  createdAt     DateTime       @default(now()) @map("created_at")
+  borrowedBooks BorrowedBook[]
+
+  @@map("books")
+}
+
+model BorrowedBook {
+  id         Int       @id @default(autoincrement())
+  memberId   Int       @map("member_id")
+  member     Member    @relation(fields: [memberId], references: [id])
+  bookId     Int       @map("book_id")
+  book       Book      @relation(fields: [bookId], references: [id])
+  returnedAt DateTime? @map("returned_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@map("borrowed_books")
+}
