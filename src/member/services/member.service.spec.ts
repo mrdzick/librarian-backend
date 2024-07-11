@@ -7,11 +7,11 @@ import { Member } from '../entities/member.entity';
 
 describe('MemberService', () => {
   let service: MemberService;
-  let prismaService: PrismaService;
 
   const mockPrismaService = {
     member: {
       findFirst: jest.fn(),
+      findUnique: jest.fn(),
       create: jest.fn(),
       findMany: jest.fn(),
       update: jest.fn(),
@@ -136,17 +136,14 @@ describe('MemberService', () => {
       newMember.setCode('DEF456');
       newMember.setName('John Doe');
 
-      mockPrismaService.member.findFirst.mockResolvedValue({ code: 'ABC123', name: 'Jane Doe' });
+      mockPrismaService.member.findUnique.mockResolvedValueOnce({ code: 'ABC123', name: 'Jane Doe' });
 
       await service.updateByMemberCode(code, newMember);
 
-      expect(mockPrismaService.member.findFirst).toHaveBeenCalledWith({
+      expect(mockPrismaService.member.findUnique).toHaveBeenNthCalledWith(1, {
         where: {
-          OR: [
-            { code: 'ABC123' },
-            { code: 'DEF456' },
-          ],
-        },
+          code: 'ABC123',
+        }
       });
       expect(mockPrismaService.member.update).toHaveBeenCalledWith({
         where: { code: 'ABC123' },
@@ -163,19 +160,16 @@ describe('MemberService', () => {
       newMember.setCode('DEF456');
       newMember.setName('John Doe');
 
-      mockPrismaService.member.findFirst.mockResolvedValue(null);
+      mockPrismaService.member.findUnique.mockResolvedValueOnce(null);
 
       await expect(service.updateByMemberCode(code, newMember)).rejects.toThrow(
         new NotFoundError(`Member with Code ${code} not found!`)
       );
 
-      expect(mockPrismaService.member.findFirst).toHaveBeenCalledWith({
+      expect(mockPrismaService.member.findUnique).toHaveBeenNthCalledWith(1, {
         where: {
-          OR: [
-            { code: 'ABC123' },
-            { code: 'DEF456' },
-          ],
-        },
+          code: 'ABC123',
+        }
       });
       expect(mockPrismaService.member.update).not.toHaveBeenCalled();
     });
@@ -186,42 +180,22 @@ describe('MemberService', () => {
       newMember.setCode('DEF456');
       newMember.setName('John Doe');
 
-      mockPrismaService.member.findFirst.mockResolvedValue({ code: 'DEF456', name: 'Existing Member' });
+      mockPrismaService.member.findUnique.mockResolvedValueOnce({ code: 'GHI789', name: 'Different Member' });
+      mockPrismaService.member.findUnique.mockResolvedValueOnce({ code: 'DEF456', name: 'Existing Member' });
 
       await expect(service.updateByMemberCode(code, newMember)).rejects.toThrow(
         new ConflictError(`Member with Code ${newMember.getCode()} already exists!`)
       );
 
-      expect(mockPrismaService.member.findFirst).toHaveBeenCalledWith({
+      expect(mockPrismaService.member.findUnique).toHaveBeenNthCalledWith(1, {
         where: {
-          OR: [
-            { code: 'ABC123' },
-            { code: 'DEF456' },
-          ],
-        },
+          code: 'ABC123',
+        }
       });
-      expect(mockPrismaService.member.update).not.toHaveBeenCalled();
-    });
-
-    it('should throw ConflictError if member is found but with different code', async () => {
-      const code = 'ABC123';
-      const newMember = new Member();
-      newMember.setCode('DEF456');
-      newMember.setName('John Doe');
-
-      mockPrismaService.member.findFirst.mockResolvedValue({ code: 'GHI789', name: 'Different Member' });
-
-      await expect(service.updateByMemberCode(code, newMember)).rejects.toThrow(
-        new ConflictError(`Member with Code ${newMember.getCode()} already exists!`)
-      );
-
-      expect(mockPrismaService.member.findFirst).toHaveBeenCalledWith({
+      expect(mockPrismaService.member.findUnique).toHaveBeenNthCalledWith(2, {
         where: {
-          OR: [
-            { code: 'ABC123' },
-            { code: 'DEF456' },
-          ],
-        },
+          code: 'DEF456',
+        }
       });
       expect(mockPrismaService.member.update).not.toHaveBeenCalled();
     });
