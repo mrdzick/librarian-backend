@@ -1,12 +1,20 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MemberService } from '../services/member.service';
 import { Member } from '../entities/member.entity';
+import { SuccessResponse } from '../../common/dtos/success-response.dto';
 import { CreateMemberRequestDto, CreateMemberResponseDto } from '../dtos/create-member.dto';
 import { UpdateMemberRequestDto, UpdateMemberResponseDto } from '../dtos/update-member.dto';
-import { GetAllMembersResponseDto } from '../dtos/get-all-members.dto';
+import { GetAllMembersResponseDto, Member as ListMemberResponseSchema } from '../dtos/get-all-members.dto';
 import { ConflictError } from '../../common/errors/conflict.error';
 import { NotFoundError } from '../../common/errors/not-found.error';
+import { getAllMembersDocsConfig } from '../docs/get-all-members.docs';
 
+@ApiTags('Members')
+@ApiExtraModels(
+  ListMemberResponseSchema,
+  SuccessResponse,
+)
 @Controller('members')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
@@ -36,6 +44,7 @@ export class MemberController {
     }
   }
 
+  @ApiResponse(getAllMembersDocsConfig)
   @Get()
   async findAll(): Promise<GetAllMembersResponseDto> {
     const members =await this.memberService.findAll();

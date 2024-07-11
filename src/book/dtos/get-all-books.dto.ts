@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 import { SuccessResponse } from '../../common/dtos/success-response.dto';
@@ -11,10 +11,17 @@ export class GetAllBooksRequestDto {
   min_stock?: number;
 }
 
-class Book {
+export class Book {
+  @ApiProperty()
   code: string;
+
+  @ApiProperty()
   title: string;
+  
+  @ApiProperty()
   author: string;
+  
+  @ApiProperty()
   stock: number;
 }
 

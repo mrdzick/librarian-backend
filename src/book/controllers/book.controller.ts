@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, ConflictException, InternalServerErrorException, Query, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, ConflictException, InternalServerErrorException, Query, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ConflictError } from '../../common/errors/conflict.error';
 import { BusinessRuleViolationError } from '../../common/errors/business-rule-violation.error';
 import { NotFoundError } from '../../common/errors/not-found.error';
+import { SuccessResponse } from '../../common/dtos/success-response.dto';
 import { BookService } from '../services/book.service';
 import { CreateBookRequestDto, CreateBookResponseDto } from '../dtos/create-book.dto';
 import { UpdateBookRequestDto, UpdateBookResponseDto } from '../dtos/update-book.dto';
 import { Book } from '../entities/book.entity';
-import { GetAllBooksRequestDto, GetAllBooksResponseDto } from '../dtos/get-all-books.dto';
+import { GetAllBooksRequestDto, GetAllBooksResponseDto, Book as ListBookResponseSchema } from '../dtos/get-all-books.dto';
 import { BorrowBookRequestDto, BorrowBookResponseDto } from '../dtos/borrow-book.dto';
 import { ReturnBookRequestDto, ReturnBookResponseDto } from '../dtos/return-book.dto'
+import { getAllBooksDocsConfig } from '../docs/get-all-books.docs';
 
+@ApiTags('Books')
+@ApiExtraModels(
+  ListBookResponseSchema,
+  SuccessResponse,
+)
 @Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
@@ -40,6 +48,7 @@ export class BookController {
     }
   }
 
+  @ApiResponse(getAllBooksDocsConfig)
   @Get()
   async findAll(@Query() getAllBooksRequestDto: GetAllBooksRequestDto): Promise<GetAllBooksResponseDto> {
     const books = await this.bookService.findAll({

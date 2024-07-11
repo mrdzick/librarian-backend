@@ -1,9 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { SuccessResponse } from '../../common/dtos/success-response.dto';
 
-class Member {
+export class Member {
+  @ApiProperty()
   code: string;
+
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   borrowed_books_count: number;
+
+  @ApiProperty()
   is_penalized: boolean;
 }
 
