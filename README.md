@@ -1,73 +1,103 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Librarian App
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Table of Contents
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+1. [Introduction](#introduction)
+2. [Tech Stack](#tech-stack)
+3. [ERD](#erd)
+4. [Setup Instructions](#setup-instructions)
+   - [Development](#development)
+   - [Testing](#testing)
+   - [Production](#production)
 
-## Description
+## Introduction
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The Librarian App is a NestJS-based application designed to manage a library system, including functionalities for book borrowing, member management, and more.
 
-## Installation
+## Tech Stack
 
-```bash
-$ npm install
-```
+- **Backend Framework**: NestJS
+- **Database**: PostgreSQL (via Prisma ORM)
+- **API Documentation**: Swagger
+- **Testing**: Jest
 
-## Running the app
+## ERD
 
-```bash
-# development
-$ npm run start
 
-# watch mode
-$ npm run start:dev
+[Link to ERD Diagram](https://dbdiagram.io/d/Librarian-667bb48f9939893dae495a54)
 
-# production mode
-$ npm run start:prod
-```
+## Setup Instructions
 
-## Test
+### Development
 
-```bash
-# unit tests
-$ npm run test
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/mrdzick/librarian-backend.git
+   ```
+   ```
+   cd librarian-backend
+   ```
+2. **Install dependencies***
+    ```
+    npm install
+    ```
+3. **Setup environment variables**
+  
+    Copy the `.env.template` file to create your own `.env` file:
+    ```
+    cp .env.template .env
+    ```
+    Then fill in the necessary environment variables in the `.env` file.
+4. Create database for your development. Make sure database name is the same as you defined in your `.env` file.
+5. **Run database migrations**
+    ```
+    npx prisma migrate dev
+    ```
+6. **Start the application**
+    ```
+    npm run start:dev
+    ```
 
-# e2e tests
-$ npm run test:e2e
+### Testing
+1. Create separate database for running test cases.
+2. Change the value of `.env.test` value based on your test environment.
+3. Run unit test:
+    ```
+    npm run test
+    ```
+4. Run end to end test:
+    ```
+    npm run test:e2e
+    ```
 
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+### Production
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/mrdzick/librarian-backend.git
+   ```
+   ```
+   cd librarian-backend
+   ```
+2. **Install dependencies***
+    ```
+    npm install
+    ```
+3. **Setup environment variables**
+  
+    Copy the `.env.template` file to create your own `.env` file:
+    ```
+    cp .env.template .env
+    ```
+    Then fill in the necessary environment variables in the `.env` file.
+4. Create database for your production. Make sure database name is the same as you defined in your `.env` file.
+5. **Run database migrations**
+    ```
+    npx prisma migrate deploy
+    ```
+6. **Build and start the application**
+    ```
+    npm run build
+    ```
+    ```
+    npm run start:prod
+    ```
