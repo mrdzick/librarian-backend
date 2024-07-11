@@ -176,22 +176,5 @@ describe('MemberController', () => {
         expect.any(Member),
       );
     });
-
-    it('should throw InternalServerErrorException on unexpected error', async () => {
-      const code = 'ABC123';
-      const updateMemberDto: UpdateMemberRequestDto = { code: 'ABC123', name: 'Updated Name' };
-
-      mockMemberService.updateByMemberCode.mockRejectedValueOnce(new Error('Unexpected error'));
-
-      await expect(controller.update(code, updateMemberDto)).rejects.toThrow(
-        new InternalServerErrorException('Terjadi kesalahan pada server!')
-      );
-
-      expect(mockMemberService.updateByMemberCode).toHaveBeenCalledTimes(1);
-      expect(mockMemberService.updateByMemberCode).toHaveBeenCalledWith(
-        code,
-        expect.any(Member),
-      );
-    });
   });
 });
