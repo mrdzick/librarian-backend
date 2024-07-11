@@ -4,6 +4,7 @@ export class Member {
   private name: string;
   private borrowedBooksCount: number;
   private isPenalized: boolean;
+  private penaltyExpirationDate: Date;
   private createdAt: Date;
 
   public getId(): number {
@@ -44,6 +45,14 @@ export class Member {
 
   public setIsPenalized(isPenalized: boolean): void {
     this.isPenalized = isPenalized;
+  }
+
+  public getPenaltyExpirationDate(): Date {
+    return this.penaltyExpirationDate;
+  }
+
+  public setPenaltyExpirationDate(penaltyExpirationDate: Date): void {
+    this.penaltyExpirationDate = penaltyExpirationDate;
   }
 
   public getCreatedAt(): Date {

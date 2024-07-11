@@ -67,6 +67,30 @@ describe('Member Controller (e2e)', () => {
         .expect(200)
         .expect(expectedResult);
     });
+
+    it('should update penalty status of members', async () => {
+      const member = await prismaService.member.create({
+        data: {
+          code: 'ABC123',
+          name: 'John Doe',
+          isPenalized: true,
+          penaltyExpirationDate: new Date('2022-01-01T00:00:00.000Z'),
+        },
+      });
+
+      const expectedResult = {
+        data: [
+          { code: 'ABC123', name: 'John Doe', borrowed_books_count: 0, is_penalized: false },
+        ],
+        statusCode: 200,
+        message: 'Berhasil mendapatkan semua anggota!'
+      }
+
+      await request(app.getHttpServer())
+        .get('/members')
+        .expect(200)
+        .expect(expectedResult);
+    });
   });
 
   describe('/members (POST)', () => {

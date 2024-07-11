@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { NotFoundError } from '../../common/errors/not-found.error';
 import { ConflictError } from '../../common/errors/conflict.error';
 import { Member } from '../entities/member.entity';
+import { DateUtil } from 'src/common/utils/date.util';
 
 @Injectable()
 export class MemberService {
@@ -30,6 +31,20 @@ export class MemberService {
   }
 
   async findAll(): Promise<Member[]> {
+    // Unpenalized members that has reach end of penalty period
+    await this.prismaService.member.updateMany({
+      where: {
+        isPenalized: true,
+        penaltyExpirationDate: {
+          lte: new Date(),
+        },
+      },
+      data: {
+        isPenalized: false,
+        penaltyExpirationDate: null,
+      },
+    });
+
     const members = await this.prismaService.member.findMany();
 
     const memberEntities = members.map((member) => {

@@ -15,6 +15,7 @@ describe('MemberService', () => {
       create: jest.fn(),
       findMany: jest.fn(),
       update: jest.fn(),
+      updateMany: jest.fn(),
     },
   };
 
@@ -98,6 +99,7 @@ describe('MemberService', () => {
         },
       ];
 
+      mockPrismaService.member.updateMany.mockResolvedValue({ count: 0 });
       mockPrismaService.member.findMany.mockResolvedValue(members);
 
       const result = await service.findAll();
@@ -121,6 +123,7 @@ describe('MemberService', () => {
 
     it('should return an empty array if no members are found', async () => {
       mockPrismaService.member.findMany.mockResolvedValue([]);
+      mockPrismaService.member.updateMany.mockResolvedValue({ count: 0 });
 
       const result = await service.findAll();
 
