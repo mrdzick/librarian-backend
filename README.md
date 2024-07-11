@@ -9,6 +9,7 @@
    - [Development](#development)
    - [Testing](#testing)
    - [Production](#production)
+5. [Documentation](#documentation)
 
 ## Introduction
 
@@ -101,3 +102,9 @@ The Librarian App is a NestJS-based application designed to manage a library sys
     ```
     npm run start:prod
     ```
+### Documentation ###
+1. Make sure you defined `SWAGGER_ENABLED=true` in your `.env` file.
+    ```
+    SWAGGER_ENABLED=true
+    ```
+2. Access `/docs` endpoint. For example, if this application running in `http://localhost:3000`, it will be `http://localhost:3000/docs`
