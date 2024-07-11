@@ -19,6 +19,7 @@ model Member {
   name               String         @db.VarChar(100)
   borrowedBooksCount Int            @default(0) @map("borrowed_books_count")
   isPenalized        Boolean        @default(false) @map("is_penalized")
+  penaltyExpirationDate DateTime? @map("penalty_expiration_date")
   createdAt          DateTime       @default(now()) @map("created_at")
   borrowedBooks      BorrowedBook[]
 

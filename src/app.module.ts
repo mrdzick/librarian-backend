@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { MemberModule } from './member/member.module';
 import { ConfigModule } from '@nestjs/config';
+import { BookModule } from './book/book.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     PrismaModule,
-    MemberModule
+    MemberModule,
+    BookModule
   ],
   controllers: [AppController],
   providers: [AppService],
