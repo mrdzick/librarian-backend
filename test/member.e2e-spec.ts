@@ -2,23 +2,33 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import { TableTestHelper } from './helpers/table-test.helper';
+import { PrismaService } from '../src/prisma/prisma.service';
+import { setupGlobalPipes } from '../src/config/main-config';
 
 describe('Member Controller (e2e)', () => {
-  const tableTestHelper = new TableTestHelper({});
+  let prismaService: PrismaService;
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
+    prismaService = moduleFixture.get<PrismaService>(PrismaService);
+
     app = moduleFixture.createNestApplication();
+
+    setupGlobalPipes(app);
     await app.init();
   });
 
   afterEach(async () => {
-    await tableTestHelper.member.deleteMany({});
+    await prismaService.member.deleteMany({});
+  });
+
+  afterAll(async () => {
+    await prismaService.$disconnect();
+    await app.close();
   });
 
   describe('/members (GET)', () => {
@@ -36,7 +46,7 @@ describe('Member Controller (e2e)', () => {
     });
 
     it('should return all members data', async () => {
-      await tableTestHelper.member.createMany({
+      await prismaService.member.createMany({
         data: [
           { code: 'ABC123', name: 'John Doe' },
           { code: 'DEF456', name: 'Jane Doe' },
@@ -80,7 +90,7 @@ describe('Member Controller (e2e)', () => {
         .expect(201)
         .expect(expectedResult);
 
-      const members = await tableTestHelper.member.findMany({
+      const members = await prismaService.member.findMany({
         where: {
           code: createMemberDto.code,
         },
@@ -97,7 +107,7 @@ describe('Member Controller (e2e)', () => {
         name: 'John Doe',
       };
 
-      await tableTestHelper.member.create({ data: createMemberDto });
+      await prismaService.member.create({ data: createMemberDto });
 
       const expectedResult = {
         statusCode: 409,
@@ -115,7 +125,7 @@ describe('Member Controller (e2e)', () => {
 
   describe('/members/:code (PATCH)', () => {
     it('should update a member successfully', async () => {
-      const member = await tableTestHelper.member.create({ data: { code: 'ABC123', name: 'John Doe' } });
+      const member = await prismaService.member.create({ data: { code: 'ABC123', name: 'John Doe' } });
 
       const updateMemberDto = {
         code: 'DEF456',
@@ -133,7 +143,7 @@ describe('Member Controller (e2e)', () => {
         .expect(200)
         .expect(expectedResult);
 
-      const updatedMember = await tableTestHelper.member.findFirst({
+      const updatedMember = await prismaService.member.findFirst({
         where: {
           code: updateMemberDto.code,
         },
@@ -144,14 +154,14 @@ describe('Member Controller (e2e)', () => {
     });
 
     it('should return ConflictError if member with the same code already exists', async () => {
-      const member = await tableTestHelper.member.create({ data: { code: 'ABC123', name: 'John Doe' } });
+      const member = await prismaService.member.create({ data: { code: 'ABC123', name: 'John Doe' } });
 
       const updateMemberDto = {
         code: 'DEF456',
         name: 'Jane Doe',
       };
 
-      await tableTestHelper.member.create({ data: updateMemberDto });
+      await prismaService.member.create({ data: updateMemberDto });
 
       const expectedResult = {
         statusCode: 409,
