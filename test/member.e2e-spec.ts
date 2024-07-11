@@ -23,6 +23,8 @@ describe('Member Controller (e2e)', () => {
   });
 
   afterEach(async () => {
+    await prismaService.borrowedBook.deleteMany({});
+    await prismaService.member.deleteMany({});
     await prismaService.member.deleteMany({});
   });
 
