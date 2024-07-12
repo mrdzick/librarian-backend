@@ -52,7 +52,7 @@ The Librarian App is a NestJS-based application designed to manage a library sys
 4. Create database for your development. Make sure database name is the same as you defined in your `.env` file.
 5. **Run database migrations**
     ```
-    npx prisma migrate dev
+    npm run migration:run:dev
     ```
 6. **Start the application**
     ```
@@ -62,11 +62,16 @@ The Librarian App is a NestJS-based application designed to manage a library sys
 ### Testing
 1. Create separate database for running test cases.
 2. Change the value of `.env.test` value based on your test environment.
-3. Run unit test:
+3. Create database for your test. Make sure database name is the same as you defined in your `.env.test` file.
+4. Run database migration for test.
+   ```
+   npm run migration:run:test
+   ```
+5. Run unit test:
     ```
     npm run test
     ```
-4. Run end to end test:
+6. Run end to end test:
     ```
     npm run test:e2e
     ```
@@ -93,7 +98,7 @@ The Librarian App is a NestJS-based application designed to manage a library sys
 4. Create database for your production. Make sure database name is the same as you defined in your `.env` file.
 5. **Run database migrations**
     ```
-    npx prisma migrate deploy
+    npm run migration:run
     ```
 6. **Build and start the application**
     ```
